@@ -1542,3 +1542,409 @@ def analyze_data(dfs: list[pd.DataFrame]) ->dict:
         ```
 2024-01-22 21:48:57 [INFO] Answer: {'type': 'number', 'value': 50141}
 2024-01-22 21:48:57 [INFO] Executed in: 24.343883752822876s
+2024-01-22 23:59:54 [INFO] Question: Give the value of working capital when the candidates hired is maximum ?
+2024-01-22 23:59:54 [INFO] Running PandasAI with openai LLM...
+2024-01-22 23:59:54 [INFO] Prompt ID: 40ef9c40-c08c-4ec4-886b-ba69750639fc
+2024-01-22 23:59:54 [INFO] Using prompt: You are provided with the following pandas DataFrames:
+
+<dataframe>
+Dataframe dfs[0], with 31 rows and 14 columns.
+This is the metadata of the dataframe dfs[0]:
+Employee turnover rate,Employee retention rate,Organisation Expansion index,No of Large scale projects,No of medium and small scale projects,NIFTY,SENSEX,NIFTY IT,GDP,Gross profit margin,Working Capital,Quick Ratio,Return on Equity,Candidates Hired
+8.5,91.5,0.3,34,7,21658.25,71968.72,34835.25,20974620,69.45,54203,1.77,18.5,2000
+5.45,94.55,0.4,46,5,15780.25,60840.74,28621.72,14541200,63.35,53394,1.76,18.5,1300
+4.5,95.5,0.3,44,13,17339.85,53018.94,27843.35,13548500,62.35,51392,1.93,17.5,1500
+9.0,91.0,0.5,45,8,17662.15,72240.26,35515.12,18574290,65.66,55392,1.84,18.0,1800
+6.0,94.0,0.5,47,10,19189.05,59549.92,29563.23,16435250,66.66,52492,1.68,16.54,1200
+</dataframe>
+
+<conversation>
+User: Give the value of working capital when the candidates hired is maximum ?
+</conversation>
+
+This is the initial python function. Do not change the params. Given the context, use the right dataframes.
+```python
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+```
+
+Take a deep breath and reason step-by-step. Act as a senior data analyst.
+In the answer, you must never write the "technical" names of the tables.
+Based on the last message in the conversation:
+- return the updated analyze_data function wrapped within ```python ```
+2024-01-23 00:00:17 [INFO] Code generated:
+```
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+    
+    # Extract the relevant dataframe from the list of dataframes
+    df = dfs[0]
+    
+    # Find the maximum value of "Candidates Hired"
+    max_candidates_hired = df["Candidates Hired"].max()
+    
+    # Filter the dataframe to get the row with the maximum "Candidates Hired"
+    max_candidates_hired_row = df[df["Candidates Hired"] == max_candidates_hired]
+    
+    # Get the value of "Working Capital" for the row with maximum "Candidates Hired"
+    working_capital = max_candidates_hired_row["Working Capital"].values[0]
+    
+    # Return the result as a dictionary
+    return {"type": "number", "value": working_capital}
+```
+
+2024-01-23 00:00:17 [INFO] 
+Code running:
+```
+def analyze_data(dfs: list[pd.DataFrame]) ->dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+    df = dfs[0]
+    max_candidates_hired = df['Candidates Hired'].max()
+    max_candidates_hired_row = df[df['Candidates Hired'] == max_candidates_hired]
+    working_capital = max_candidates_hired_row['Working Capital'].values[0]
+    return {'type': 'number', 'value': working_capital}
+        ```
+2024-01-23 00:00:17 [INFO] Answer: {'type': 'number', 'value': 50141}
+2024-01-23 00:00:17 [INFO] Executed in: 23.13531756401062s
+2024-01-23 00:07:26 [INFO] Question: go through the csv file and based on that let me know the no.of of canddates that I should hire this year. the first entry corresponds to first half of the the 2022 financial year and second entry corresponds to seconds half of 2022 and so on
+
+2024-01-23 00:07:26 [INFO] Running PandasAI with openai LLM...
+2024-01-23 00:07:26 [INFO] Prompt ID: d21e49f5-5622-457f-9987-63fe5dd1c35f
+2024-01-23 00:07:26 [INFO] Using prompt: You are provided with the following pandas DataFrames:
+
+<dataframe>
+Dataframe dfs[0], with 27 rows and 16 columns.
+This is the metadata of the dataframe dfs[0]:
+Employee turnover rate,Employee retention rate,Organisation Expansion index,No of Large scale projects,No of medium and small scale projects,NIFTY,SENSEX,NIFTY IT,GDP,Gross profit margin,Working Capital,Quick Ratio,Return on Equity,Candidates Hired,Projects in progress,No of projects delivered
+5.45,94.55,0.4,46,5,15780.25,60840.74,28621.72,14541200,63.35,"53,394",1.76,18.5,1300,5,38
+4.5,95.5,0.3,44,13,17339.85,53018.94,27843.35,13548500,62.35,"51,392",1.93,17.5,1500,8,36
+6.0,94.0,0.5,47,10,19189.05,59549.92,29563.23,16435250,66.66,"52,492",1.68,16.54,1200,6,41
+9.0,91.0,0.5,45,8,17662.15,72240.26,35515.12,18574290,65.66,"55,392",1.84,18.0,1800,8,37
+8.5,91.5,0.3,34,7,21658.25,71968.72,34835.25,20974620,69.45,"54,203",1.77,18.5,2000,10,27
+</dataframe>
+
+<conversation>
+User: go through the csv file and based on that let me know the no.of of canddates that I should hire this year. the first entry corresponds to first half of the the 2022 financial year and second entry corresponds to seconds half of 2022 and so on
+
+</conversation>
+
+This is the initial python function. Do not change the params. Given the context, use the right dataframes.
+```python
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+```
+
+Take a deep breath and reason step-by-step. Act as a senior data analyst.
+In the answer, you must never write the "technical" names of the tables.
+Based on the last message in the conversation:
+- return the updated analyze_data function wrapped within ```python ```
+2024-01-23 00:07:30 [INFO] error_code=invalid_api_key error_message='Incorrect API key provided: sk-Mj99S***************************************xDJk. You can find your API key at https://platform.openai.com/account/api-keys.' error_param=None error_type=invalid_request_error message='OpenAI API error received' stream_error=False
+2024-01-23 00:10:50 [INFO] Question: let me know the no.of candidates that I should hire based on the following data. first two rows correspond to 2023, the next 2022 and so on.
+
+2024-01-23 00:10:50 [INFO] Running PandasAI with openai LLM...
+2024-01-23 00:10:50 [INFO] Prompt ID: 9bd83e2f-d6fb-4887-9b45-61b4889591cb
+2024-01-23 00:10:50 [INFO] Using prompt: You are provided with the following pandas DataFrames:
+
+<dataframe>
+Dataframe dfs[0], with 27 rows and 16 columns.
+This is the metadata of the dataframe dfs[0]:
+Employee turnover rate,Employee retention rate,Organisation Expansion index,No of Large scale projects,No of medium and small scale projects,NIFTY,SENSEX,NIFTY IT,GDP,Gross profit margin,Working Capital,Quick Ratio,Return on Equity,Candidates Hired,Projects in progress,No of projects delivered
+9.0,91.0,0.5,45,8,17662.15,72240.26,35515.12,18574290,65.66,"55,392",1.84,18.0,1800,8,37
+6.0,94.0,0.5,47,10,19189.05,59549.92,29563.23,16435250,66.66,"52,492",1.68,16.54,1200,6,41
+8.5,91.5,0.3,34,7,21658.25,71968.72,34835.25,20974620,69.45,"54,203",1.77,18.5,2000,10,27
+5.45,94.55,0.4,46,5,15780.25,60840.74,28621.72,14541200,63.35,"53,394",1.76,18.5,1300,5,38
+4.5,95.5,0.3,44,13,17339.85,53018.94,27843.35,13548500,62.35,"51,392",1.93,17.5,1500,8,36
+</dataframe>
+
+<conversation>
+User: let me know the no.of candidates that I should hire based on the following data. first two rows correspond to 2023, the next 2022 and so on.
+
+</conversation>
+
+This is the initial python function. Do not change the params. Given the context, use the right dataframes.
+```python
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+```
+
+Take a deep breath and reason step-by-step. Act as a senior data analyst.
+In the answer, you must never write the "technical" names of the tables.
+Based on the last message in the conversation:
+- return the updated analyze_data function wrapped within ```python ```
+2024-01-23 00:11:10 [INFO] Code generated:
+```
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+    
+    # Extract the relevant dataframe from the list of dataframes
+    df = dfs[0]
+    
+    # Calculate the number of candidates to hire based on the turnover rate and the number of employees
+    df['Candidates to Hire'] = df['Employee turnover rate'] / 100 * df['Candidates Hired']
+    
+    # Filter the dataframe to include only the relevant columns
+    filtered_df = df[['Candidates to Hire']]
+    
+    # Convert the filtered dataframe to a dictionary
+    result = filtered_df.to_dict(orient='records')
+    
+    # Return the result as a dictionary with the appropriate type and value
+    return {"type": "dataframe", "value": result}
+```
+
+2024-01-23 00:11:10 [INFO] 
+Code running:
+```
+def analyze_data(dfs: list[pd.DataFrame]) ->dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+    df = dfs[0]
+    df['Candidates to Hire'] = df['Employee turnover rate'] / 100 * df['Candidates Hired']
+    filtered_df = df[['Candidates to Hire']]
+    result = filtered_df.to_dict(orient='records')
+    return {'type': 'dataframe', 'value': result}
+        ```
+2024-01-23 00:11:10 [INFO] Answer: {'type': 'dataframe', 'value': [{'Candidates to Hire': 170.0}, {'Candidates to Hire': 162.0}, {'Candidates to Hire': 72.0}, {'Candidates to Hire': 70.85}, {'Candidates to Hire': 67.5}, {'Candidates to Hire': 325.0}, {'Candidates to Hire': 144.0}, {'Candidates to Hire': 198.0}, {'Candidates to Hire': 240.0}, {'Candidates to Hire': 102.00000000000001}, {'Candidates to Hire': 90.0}, {'Candidates to Hire': 36.0}, {'Candidates to Hire': 25.0}, {'Candidates to Hire': 27.0}, {'Candidates to Hire': 46.0}, {'Candidates to Hire': 60.0}, {'Candidates to Hire': 157.25}, {'Candidates to Hire': 128.0}, {'Candidates to Hire': 180.0}, {'Candidates to Hire': 63.0}, {'Candidates to Hire': 72.0}, {'Candidates to Hire': 54.400000000000006}, {'Candidates to Hire': 22.5}, {'Candidates to Hire': 30.0}, {'Candidates to Hire': 91.00000000000001}, {'Candidates to Hire': 109.5}, {'Candidates to Hire': 49.5}]}
+2024-01-23 00:11:10 [INFO] Executed in: 20.516927242279053s
+2024-01-24 23:42:08 [INFO] Question: give the average of employee retention rate
+2024-01-24 23:42:08 [INFO] Running PandasAI with openai LLM...
+2024-01-24 23:42:08 [INFO] Prompt ID: e71ad425-e9c7-4005-8cb8-a07fa1d34e66
+2024-01-24 23:42:09 [INFO] Using prompt: You are provided with the following pandas DataFrames:
+
+<dataframe>
+Dataframe dfs[0], with 31 rows and 14 columns.
+This is the metadata of the dataframe dfs[0]:
+Employee turnover rate,Employee retention rate,Organisation Expansion index,No of Large scale projects,No of medium and small scale projects,NIFTY,SENSEX,NIFTY IT,GDP,Gross profit margin,Working Capital,Quick Ratio,Return on Equity,Candidates Hired
+4.5,95.5,0.3,44,13,17339.85,53018.94,27843.35,13548500,62.35,51392,1.93,17.5,1500
+5.45,94.55,0.4,46,5,15780.25,60840.74,28621.72,14541200,63.35,53394,1.76,18.5,1300
+8.5,91.5,0.3,34,7,21658.25,71968.72,34835.25,20974620,69.45,54203,1.77,18.5,2000
+6.0,94.0,0.5,47,10,19189.05,59549.92,29563.23,16435250,66.66,52492,1.68,16.54,1200
+9.0,91.0,0.5,45,8,17662.15,72240.26,35515.12,18574290,65.66,55392,1.84,18.0,1800
+</dataframe>
+
+<conversation>
+User: give the average of employee retention rate
+</conversation>
+
+This is the initial python function. Do not change the params. Given the context, use the right dataframes.
+```python
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+```
+
+Take a deep breath and reason step-by-step. Act as a senior data analyst.
+In the answer, you must never write the "technical" names of the tables.
+Based on the last message in the conversation:
+- return the updated analyze_data function wrapped within ```python ```
+2024-01-24 23:42:30 [INFO] Code generated:
+```
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+    
+    # Extract the relevant dataframe from the list of dataframes
+    df = dfs[0]
+    
+    # Calculate the average of employee retention rate
+    avg_retention_rate = df['Employee retention rate'].mean()
+    
+    # Return the result as a dictionary
+    result = {
+        "type": "number",
+        "value": avg_retention_rate
+    }
+    
+    return result
+```
+
+2024-01-24 23:42:30 [INFO] 
+Code running:
+```
+def analyze_data(dfs: list[pd.DataFrame]) ->dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+    df = dfs[0]
+    avg_retention_rate = df['Employee retention rate'].mean()
+    result = {'type': 'number', 'value': avg_retention_rate}
+    return result
+        ```
+2024-01-24 23:42:30 [INFO] Answer: {'type': 'number', 'value': 91.41774193548386}
+2024-01-24 23:42:30 [INFO] Executed in: 22.075037002563477s
