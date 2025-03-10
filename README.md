@@ -1,36 +1,17 @@
-# Langchain Chat-CSV with OpenAI (Tutorial)
-> You can find the step-by-step video tutorial to build this application [on YouTube](https://youtu.be/tjeti5vXWOU).
+1. Valid Credentials → Enter correct username and password, verify successful login.
+2. ✅ Case Insensitivity (if applicable) → Test if the username field is case-insensitive (e.g., Admin vs. admin).
+3. ❌ Incorrect Username → Enter an invalid username but a valid password.
+4  ❌ Incorrect Password → Enter a valid username but an incorrect password.
+5. ❌ Both Incorrect → Enter an incorrect username and password.
+6. ❌ Empty Fields → Try logging in with both fields empty.
+7. ❌ Only Username Entered → Enter only the username and leave the password field empty.
+8. ❌ Only Password Entered → Enter only the password and leave the username field empty.
+9. ❌ SQL Injection Attempt → Enter SQL injection payloads (e.g., ' OR 1=1 -- or admin' --) to check for vulnerabilities.
+10. Max Length Validation → Enter a username/password exceeding the allowed length.
+11. Error Message Validation → Ensure proper error messages are displayed for each failed case. 
 
-This is a Python application that enables you to load a CSV file and ask questions about its contents using natural language. The application leverages Language Models (LLMs) to generate responses based on the CSV data. The LLM will only provide answers related to the information present in the CSV.
-
-## How it works
-
-The application reads the CSV file and processes the data. It utilizes OpenAI LLMs alongside with Langchain Agents in order to answer your questions. The CSV agent then uses tools to find solutions to your questions and generates an appropriate response with the help of a LLM.
-
-The application employs Streamlit to create the graphical user interface (GUI) and utilizes Langchain to interact with the LLM.
-
-## Installation
-
-To install the repository, follow these steps:
-
-1. Clone this repository to your local machine.
-2. Install the necessary dependencies by running the following command:
-
-   ```
-   pip install -r requirements.txt
-   ```
-
-3. Additionally, you need to obtain an OpenAI API key and add it to the `.env` file.
-
-## Usage
-
-To use the application, execute the `main.py` file using the Streamlit CLI. Make sure you have Streamlit installed before running the application. Run the following command in your terminal:
-
-```
-streamlit run main.py
-```
-
-## Contributing
-This repository is intended for educational purposes only and is not designed to accept external contributions. It serves as supplemental material for the YouTube tutorial, demonstrating how to build the project.
-
-For any suggestions or improvements related to the tutorial content, please feel free to reach out through the YouTube channel's comment section.
+Notes: 
+ use waitforurl() to complete login test 
+ use hooks
+ use describe to group tests
+ afterall hook to do page.close()
