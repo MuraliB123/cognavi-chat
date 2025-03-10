@@ -6,6 +6,30 @@ import pandas as pd
 from pandasai import PandasAI
 
 load_dotenv()
+// Import CryptoJS
+const CryptoJS = require("crypto-js");
+
+// 🔹 Encrypt Function
+function encryptPassword(password, key) {
+    return CryptoJS.AES.encrypt(password, key).toString();
+}
+
+// 🔹 Decrypt Function
+function decryptPassword(encryptedPassword, key) {
+    const bytes = CryptoJS.AES.decrypt(encryptedPassword, key);
+    return bytes.toString(CryptoJS.enc.Utf8);
+}
+
+// 🔹 Example Usage
+const key = "mySecretKey123";  // 🔑 Key should be the same for encryption & decryption
+const password = "mySecurePassword";
+
+const encrypted = encryptPassword(password, key);
+console.log("Encrypted:", encrypted);
+
+const decrypted = decryptPassword(encrypted, key);
+console.log("Decrypted:", decrypted);
+
 
 
 openai_api_key ="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"
