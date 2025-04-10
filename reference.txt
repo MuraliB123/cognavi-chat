@@ -1,131 +1,65 @@
-dotnet add package EPPlus
 using System;
+using System.Data.SqlClient;
 using System.IO;
-using OfficeOpenXml;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
+using NUnit.Framework;
 
-class Program
+namespace PlaywrightTests
 {
-    static void Main()
+    public class DownloadAndUploadTests
     {
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Required for free use
+        private IBrowser _browser;
+        private IBrowserContext _context;
+        private IPage _page;
 
-        using (var package = new ExcelPackage(new FileInfo("data.xlsx")))
+        [OneTimeSetUp]
+        public async Task Setup()
         {
-            var worksheet = package.Workbook.Worksheets[0]; // Get first sheet
-            int rows = worksheet.Dimension.Rows;
-            int cols = worksheet.Dimension.Columns;
-
-            for (int row = 1; row <= rows; row++)
-            {
-                for (int col = 1; col <= cols; col++)
-                {
-                    Console.Write(worksheet.Cells[row, col].Text + "\t");
-                }
-                Console.WriteLine();
-            }
+            var playwright = await Playwright.CreateAsync();
+            _browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
+            _context = await _browser.NewContextAsync(new() { AcceptDownloads = true });
+            _page = await _context.NewPageAsync();
         }
-    }
-}
-using System;
-using System.IO;
-using OfficeOpenXml;
 
-class Program
-{
-    static void Main()
-    {
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-        using (var package = new ExcelPackage())
+        [OneTimeTearDown]
+        public async Task TearDown()
         {
-            var worksheet = package.Workbook.Worksheets.Add("Sheet1");
-            worksheet.Cells[1, 1].Value = "ID";
-            worksheet.Cells[1, 2].Value = "Name";
-            worksheet.Cells[2, 1].Value = 1;
-            worksheet.Cells[2, 2].Value = "Alice";
-
-            package.SaveAs(new FileInfo("output.xlsx"));
+            await _browser.CloseAsync();
         }
-        Console.WriteLine("Excel file created!");
-    }
-}
-dotnet add package ClosedXML
-using System;
-using ClosedXML.Excel;
 
-class Program
-{
-    static void Main()
-    {
-        using (var workbook = new XLWorkbook("data.xlsx"))
+        [Test]
+        public async Task DownloadFile_And_SaveToDatabase()
         {
-            var worksheet = workbook.Worksheet(1); // Get first worksheet
-            var range = worksheet.RangeUsed(); // Get the used range
-            foreach (var row in range.Rows())
-            {
-                foreach (var cell in row.Cells())
-                {
-                    Console.Write(cell.GetValue<string>() + "\t");
-                }
-                Console.WriteLine();
-            }
-        }
-    }
-}
-dotnet add package NPOI
-using System;
-using System.IO;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
+            await _page.GotoAsync("https://file-examples.com/index.php/sample-documents-download/sample-pdf-download/");
 
-class Program
-{
-    static void Main()
-    {
-        using (var fs = new FileStream("data.xlsx", FileMode.Open, FileAccess.Read))
-        {
-            IWorkbook workbook = new XSSFWorkbook(fs);
-            ISheet sheet = workbook.GetSheetAt(0);
-
-            for (int row = 0; row <= sheet.LastRowNum; row++)
+            // Download file
+            var download = await _page.RunAndWaitForDownloadAsync(async () =>
             {
-                IRow currentRow = sheet.GetRow(row);
-                if (currentRow != null)
+                await _page.ClickAsync("text=Download sample pdf file");
+            });
+
+            string savePath = Path.Combine(Path.GetTempPath(), download.SuggestedFilename);
+            await download.SaveAsAsync(savePath);
+
+            // Upload to SQL DB
+            byte[] fileBytes = File.ReadAllBytes(savePath);
+            string connectionString = "Server=localhost;Database=MyDb;User Id=myuser;Password=mypassword;";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO DownloadedFiles (FileName, FileContent) VALUES (@name, @content)", conn))
                 {
-                    for (int col = 0; col < currentRow.LastCellNum; col++)
-                    {
-                        Console.Write(currentRow.GetCell(col)?.ToString() + "\t");
-                    }
-                    Console.WriteLine();
+                    cmd.Parameters.AddWithValue("@name", download.SuggestedFilename);
+                    cmd.Parameters.AddWithValue("@content", fileBytes);
+
+                    int rows = cmd.ExecuteNonQuery();
+                    Assert.AreEqual(1, rows, "One row should be inserted.");
                 }
             }
+
+            Console.WriteLine("File saved to DB: " + download.SuggestedFilename);
         }
-    }
-}
-using System;
-using System.IO;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
-
-class Program
-{
-    static void Main()
-    {
-        IWorkbook workbook = new XSSFWorkbook();
-        ISheet sheet = workbook.CreateSheet("Sheet1");
-
-        IRow row = sheet.CreateRow(0);
-        row.CreateCell(0).SetCellValue("ID");
-        row.CreateCell(1).SetCellValue("Name");
-
-        IRow row2 = sheet.CreateRow(1);
-        row2.CreateCell(0).SetCellValue(1);
-        row2.CreateCell(1).SetCellValue("Alice");
-
-        using (var fs = new FileStream("output.xlsx", FileMode.Create, FileAccess.Write))
-        {
-            workbook.Write(fs);
-        }
-        Console.WriteLine("Excel file created!");
     }
 }
