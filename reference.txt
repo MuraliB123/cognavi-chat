@@ -1,65 +1,95 @@
-using System;
-using System.Data.SqlClient;
-using System.IO;
-using System.Threading.Tasks;
 using Microsoft.Playwright;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
-namespace PlaywrightTests
+[SetUpFixture]
+public class TestBase
 {
-    public class DownloadAndUploadTests
+    public static IPlaywright Playwright { get; private set; }
+    public static IBrowser Browser1 { get; private set; }
+    public static IBrowser Browser2 { get; private set; }
+
+    [OneTimeSetUp]
+    public async Task GlobalSetup()
     {
-        private IBrowser _browser;
-        private IBrowserContext _context;
-        private IPage _page;
+        Playwright = await Microsoft.Playwright.Playwright.CreateAsync();
 
-        [OneTimeSetUp]
-        public async Task Setup()
+        // Example: both using Edge but you can customize paths or options
+        var edgePath = @"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe";
+
+        Browser1 = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            var playwright = await Playwright.CreateAsync();
-            _browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
-            _context = await _browser.NewContextAsync(new() { AcceptDownloads = true });
-            _page = await _context.NewPageAsync();
-        }
+            Headless = true,
+            ExecutablePath = edgePath
+        });
 
-        [OneTimeTearDown]
-        public async Task TearDown()
+        Browser2 = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            await _browser.CloseAsync();
-        }
-
-        [Test]
-        public async Task DownloadFile_And_SaveToDatabase()
-        {
-            await _page.GotoAsync("https://file-examples.com/index.php/sample-documents-download/sample-pdf-download/");
-
-            // Download file
-            var download = await _page.RunAndWaitForDownloadAsync(async () =>
-            {
-                await _page.ClickAsync("text=Download sample pdf file");
-            });
-
-            string savePath = Path.Combine(Path.GetTempPath(), download.SuggestedFilename);
-            await download.SaveAsAsync(savePath);
-
-            // Upload to SQL DB
-            byte[] fileBytes = File.ReadAllBytes(savePath);
-            string connectionString = "Server=localhost;Database=MyDb;User Id=myuser;Password=mypassword;";
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO DownloadedFiles (FileName, FileContent) VALUES (@name, @content)", conn))
-                {
-                    cmd.Parameters.AddWithValue("@name", download.SuggestedFilename);
-                    cmd.Parameters.AddWithValue("@content", fileBytes);
-
-                    int rows = cmd.ExecuteNonQuery();
-                    Assert.AreEqual(1, rows, "One row should be inserted.");
-                }
-            }
-
-            Console.WriteLine("File saved to DB: " + download.SuggestedFilename);
-        }
+            Headless = true,
+            ExecutablePath = edgePath // can point to a different profile or config
+        });
     }
+
+    [OneTimeTearDown]
+    public async Task GlobalTeardown()
+    {
+        await Browser1.CloseAsync();
+        await Browser2.CloseAsync();
+        Playwright.Dispose();
+    }
+}
+[TestFixture]
+public class TestsUsingBrowser1
+{
+    private IBrowserContext _context;
+    private IPage _page;
+
+    [SetUp]
+    public async Task Setup()
+    {
+        _context = await TestBase.Browser1.NewContextAsync();
+        _page = await _context.NewPageAsync();
+    }
+
+    [TearDown]
+    public async Task Teardown()
+    {
+        await _context.CloseAsync();
+    }
+
+    [Test]
+    public async Task Test1() { /* test code */ }
+
+    [Test]
+    public async Task Test2() { /* ... */ }
+
+    // Add Test3, Test4, Test5
+}
+[TestFixture]
+public class TestsUsingBrowser2
+{
+    private IBrowserContext _context;
+    private IPage _page;
+
+    [SetUp]
+    public async Task Setup()
+    {
+        _context = await TestBase.Browser2.NewContextAsync();
+        _page = await _context.NewPageAsync();
+    }
+
+    [TearDown]
+    public async Task Teardown()
+    {
+        await _context.CloseAsync();
+    }
+
+    [Test]
+    public async Task Test6() { /* test code */ }
+
+    [Test]
+    public async Task Test7() { /* ... */ }
+
+    [Test]
+    public async Task Test8() { /* ... */ }
 }
