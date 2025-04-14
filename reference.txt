@@ -1,21 +1,14 @@
-using Microsoft.Playwright;
-using NUnit.Framework;
-using System.Threading.Tasks;
-
-[SetUpFixture]
-public class TestBase
+public static class BrowserManager
 {
     public static IPlaywright Playwright { get; private set; }
     public static IBrowser Browser1 { get; private set; }
     public static IBrowser Browser2 { get; private set; }
 
-    [OneTimeSetUp]
-    public async Task GlobalSetup()
+    public static async Task InitializeAsync()
     {
         Playwright = await Microsoft.Playwright.Playwright.CreateAsync();
 
-        // Example: both using Edge but you can customize paths or options
-        var edgePath = @"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe";
+        string edgePath = @"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe";
 
         Browser1 = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
@@ -26,70 +19,31 @@ public class TestBase
         Browser2 = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = true,
-            ExecutablePath = edgePath // can point to a different profile or config
+            ExecutablePath = edgePath
         });
     }
 
-    [OneTimeTearDown]
-    public async Task GlobalTeardown()
+    public static async Task CleanupAsync()
     {
         await Browser1.CloseAsync();
         await Browser2.CloseAsync();
         Playwright.Dispose();
     }
-}
-[TestFixture]
-public class TestsUsingBrowser1
+}[OneTimeSetUp]
+public async Task GlobalSetup()
 {
-    private IBrowserContext _context;
-    private IPage _page;
-
-    [SetUp]
-    public async Task Setup()
-    {
-        _context = await TestBase.Browser1.NewContextAsync();
-        _page = await _context.NewPageAsync();
-    }
-
-    [TearDown]
-    public async Task Teardown()
-    {
-        await _context.CloseAsync();
-    }
-
-    [Test]
-    public async Task Test1() { /* test code */ }
-
-    [Test]
-    public async Task Test2() { /* ... */ }
-
-    // Add Test3, Test4, Test5
+    await BrowserManager.InitializeAsync();
 }
-[TestFixture]
-public class TestsUsingBrowser2
+
+[OneTimeTearDown]
+public async Task GlobalTeardown()
 {
-    private IBrowserContext _context;
-    private IPage _page;
-
-    [SetUp]
-    public async Task Setup()
-    {
-        _context = await TestBase.Browser2.NewContextAsync();
-        _page = await _context.NewPageAsync();
-    }
-
-    [TearDown]
-    public async Task Teardown()
-    {
-        await _context.CloseAsync();
-    }
-
-    [Test]
-    public async Task Test6() { /* test code */ }
-
-    [Test]
-    public async Task Test7() { /* ... */ }
-
-    [Test]
-    public async Task Test8() { /* ... */ }
+    await BrowserManager.CleanupAsync();
 }
+[SetUp]
+public async Task Setup()
+{
+    _context = await BrowserManager.Browser2.NewContextAsync();
+    _page = await _context.NewPageAsync();
+}
+
