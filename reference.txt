@@ -1,49 +1,63 @@
-public static class BrowserManager
-{
-    public static IPlaywright Playwright { get; private set; }
-    public static IBrowser Browser1 { get; private set; }
-    public static IBrowser Browser2 { get; private set; }
+using Microsoft.Playwright;
+using NUnit.Framework;
+using System.Threading.Tasks;
 
-    public static async Task InitializeAsync()
+namespace PlaywrightTests
+{
+    public class CleanLoginTests
     {
-        Playwright = await Microsoft.Playwright.Playwright.CreateAsync();
+        private IBrowser _browser;
+        private IBrowserContext _context;
+        private IPage _page;
 
-        string edgePath = @"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe";
-
-        Browser1 = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        [SetUp]
+        public async Task Setup()
         {
-            Headless = true,
-            ExecutablePath = edgePath
-        });
+            var playwright = await Playwright.CreateAsync();
+            _browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+            {
+                Headless = false, // optional: show browser for debugging
+                Args = new[] { "--incognito" } // optional: force incognito mode
+            });
 
-        Browser2 = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+            // ✅ Fresh browser context — no cached logins
+            _context = await _browser.NewContextAsync(new BrowserNewContextOptions
+            {
+                IgnoreHTTPSErrors = true, // helps with internal enterprise certs
+                StorageStatePath = null   // ensures nothing cached is loaded
+            });
+
+            _page = await _context.NewPageAsync();
+        }
+
+        [Test]
+        public async Task LoginWithServiceAccount()
         {
-            Headless = true,
-            ExecutablePath = edgePath
-        });
+            await _page.GotoAsync("https://your.sharepoint.com/path-to-login");
+
+            // Fill in service account credentials
+            await _page.FillAsync("#i0116", "service.account@yourdomain.com");
+            await _page.ClickAsync("#idSIButton9");
+
+            await _page.FillAsync("#i0118", "yourServiceAccountPassword");
+            await _page.ClickAsync("#idSIButton9");
+
+            // Handle "Stay signed in?" prompt if it appears
+            var staySignedIn = await _page.Locator("#idBtn_Back").IsVisibleAsync();
+            if (staySignedIn)
+            {
+                await _page.ClickAsync("#idBtn_Back"); // Click "No"
+            }
+
+            // You're now logged in as the service account!
+            // Proceed to file download, etc.
+        }
+
+        [TearDown]
+        public async Task Teardown()
+        {
+            await _context.CloseAsync();
+            await _browser.CloseAsync();
+        }
     }
-
-    public static async Task CleanupAsync()
-    {
-        await Browser1.CloseAsync();
-        await Browser2.CloseAsync();
-        Playwright.Dispose();
-    }
-}[OneTimeSetUp]
-public async Task GlobalSetup()
-{
-    await BrowserManager.InitializeAsync();
 }
-
-[OneTimeTearDown]
-public async Task GlobalTeardown()
-{
-    await BrowserManager.CleanupAsync();
-}
-[SetUp]
-public async Task Setup()
-{
-    _context = await BrowserManager.Browser2.NewContextAsync();
-    _page = await _context.NewPageAsync();
-}
-
