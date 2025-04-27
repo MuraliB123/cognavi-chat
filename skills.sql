@@ -1,51 +1,132 @@
--- MySQL dump 10.13  Distrib 8.0.35, for Linux (x86_64)
---
--- Host: localhost    Database: HIREOPS
--- ------------------------------------------------------
--- Server version	8.0.35-0ubuntu0.20.04.1
+ POC Plan: Forecasting Cafeteria Demand at Wells Fargo (SmartQ)
+🎯 Objectives
+Build a system to forecast daily demand for each food counter in the cafeteria.
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+Predict employee presence patterns to support demand estimation.
 
---
--- Table structure for table `skills`
---
+Enhance prediction accuracy using graph-based learning and probabilistic modeling techniques.
 
-DROP TABLE IF EXISTS `skills`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `skills` (
-  `employee_id` int NOT NULL,
-  `SKILLS` varchar(109) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-  PRIMARY KEY (`employee_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+Provide confidence scores for better operational decision-making in cafeteria management.
 
---
--- Dumping data for table `skills`
---
+🔍 Approach
+1. Data Understanding
+Employee Data:
 
-LOCK TABLES `skills` WRITE;
-/*!40000 ALTER TABLE `skills` DISABLE KEYS */;
-INSERT INTO `skills` VALUES (1,'CI/CD,JENKINS,CLOUD COMPUTING,AWS,DATABASE MANAGEMENT,MYSQL,POSTGRESQL,KUBERNETES,DOCKER,POSTMAN'),(2,'DATABASE ANALYSIS,MSEXCEL,POWERBI,DATABASE TESTING,SQL,JMETER,TESTRAIL,COLLABORATION'),(3,'WEB DEVELOPMENT,DOCKER,KUBERNETES,AWS,PHP,DATABASE MANAGEMENT,MONGODB,JAVA,TEST PLANNING,SELENIUM'),(4,'GRAPHIC DESIGN,FIGMA,ADOBEXD,WEB DEVELOPMENT,JAVASCRIPT,USER RESEARCH,COLLABORATION,PROBLEM SOLVING'),(5,'SQL,DATABASE MANAGEMENT,ETL,PYTHON,C++,DATA ANALYSIS,FLASK,WEB DEVELOPMENT,REST,MACHINE LEARNING'),(6,'DATA ANALYSIS,MACHINE LEARNING,PYTHON,R,FEATURE ENGINEERING,HYPERPARAMETER TUNING,FLASK'),(7,'DATA ANALYSIS,MACHINE LEARNING,JAVASCRIPT,PYTHON,API DESIGN,PROBLEM SOLVING,API TESTING,REST'),(8,'PYTHON,DATA ANALYSIS,TABLEAU,POWERBI,MACHINE LEARNING,HYPERPARAMETER TUNING,LABELBOX,CVAT'),(9,'MOBILE APP DEVELOPMENT,SWIFT,KOTLIN,FLUTTER,API INTEGRATION,VERSION CONTROL,GIT,JAVASCRIPT,JAVA,REACT NATIVE'),(10,'DISTRIBUTED SYSTEMS,API INTEGRATION,UX DESIGN,DATABASE MANAGEMENT,PYTHON,DOCKER,ETL,AWS,MONGODB'),(11,'CLOUD COMPUTING,DOCKER,KUBERNETES,CI/CD,GITLAB CI,AWS,MONGODB,TABLEAU,JAVA'),(12,'DATABASE MANAGEMENT,DATABASE TESTING,DISTRIBUTED SYSTEMS,MONGODB,API INTEGRATION,AWS,DATA MODELING,PHP,PYTHON'),(13,'MACHINE LEARNING,HYPERPARAMETER TUNING,API DESIGN,POSTMAN,FLASK,SPRINGBOOT,NODE.JS,API INTEGRATION,JAVA'),(14,'MACHINE LEARNING,HYPERPARAMETER TUNING,DATA ANALYSIS,CLOUD COMPUTING,KUBERNETES,AZURE,FASTAPI,FLASK,CI/CD');
-/*!40000 ALTER TABLE `skills` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+Fields: employee ID, date, day, login time, logout time.
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+SmartQ Cafeteria Data:
 
--- Dump completed on 2024-01-25  0:05:11
+Fields: counter name, order ID, order amount, ordered dish, employee ID.
+
+2. Data Mapping and User Base Creation
+Map each employee to the counters they frequently order from.
+
+Create a user base list for each counter, identifying regular customers.
+
+3. Employee Presence Forecasting
+Analyze historical login/logout data to forecast the day-wise presence probability for each employee.
+
+Identify days with maximum likelihood of employee presence.
+
+4. Counter Demand Prediction (Time Series)
+Build individual time series models for each counter based on daily historical orders.
+
+Forecast the expected number of orders for each counter on upcoming days.
+
+5. Employee Count Prediction (Time Series)
+Build a separate time series model to predict daily active employee count based on historical attendance data.
+
+6. Dependency Modeling (Regression)
+Train a regression model to link employee attendance trends to counter demand.
+
+Capture how changes in employee volume impact orders at different counters.
+
+7. Confidence Score Calculation
+For each counter, calculate the percentage of user base present on a given day.
+
+Generate a confidence score for each demand prediction based on employee presence strength.
+
+8. Graph-based Learning (GCN Enhancement)
+Model the employee-counter interactions as a graph.
+
+Apply Graph Convolutional Networks (GCNs) to learn hidden patterns and community behaviors influencing counter demand.
+
+9. Probabilistic Modeling Enhancement
+Apply Bayesian probabilistic models (e.g., Poisson Regression) to forecast not just the expected demand but also uncertainty ranges.
+
+Output confidence intervals for predicted demand values to support better stock and staffing decisions.
+
+📌 Final Deliverables
+Daily demand forecasts per counter with confidence intervals.
+
+Employee presence predictions per day.
+
+Confidence scores based on employee-counter base matching.
+
+Model performance reports comparing traditional and advanced approaches (Time Series, Regression, GCN, Bayesian).
+
+🧠 Future Enhancements
+Incorporate special event signals (e.g., festivals, public holidays) into models.
+
+Extend to real-time predictions based on live login/order activity.
+
+Integrate with SmartQ app for dynamic counter-wise inventory planning.
+        +----------------------+
+        |  Employee Data        |
+        |  (ID, Date, Login/Out) |
+        +----------+-----------+
+                   |
+                   v
+        +----------------------+
+        |  Presence Pattern     |
+        |  Forecasting          |
+        +----------------------+
+                   |
+                   v
+        +----------------------+
+        |  Employee Count       |
+        |  Prediction (Time Series) |
+        +----------------------+
+                  
+                                                    
+        +----------------------+
+        |  SmartQ Order Data    |
+        |  (Counter, Order ID,  |
+        |   Amount, Dish, EmpID)|
+        +----------+-----------+
+                   |
+                   v
+        +----------------------+
+        |  Counter-wise Mapping |
+        |  (User Base Creation) |
+        +----------------------+
+                   |
+                   v
+        +---------------------------+
+        |  Counter Demand Forecast   |
+        |  (Time Series + Regression)|
+        +---------------------------+
+
+                   | 
+                   v
++-------------------------------------------------+
+|           Advanced Modeling Layer               |
+| +---------------------------------------------+ |
+| |  Graph Modeling (Employee ↔ Counter Graph)  | |
+| |  → Train GCN for Hidden Interaction Patterns| |
+| +---------------------------------------------+ |
+| +---------------------------------------------+ |
+| |  Probabilistic Modeling (Bayesian Approach) | |
+| |  → Predict Demand with Uncertainty          | |
+| +---------------------------------------------+ |
++-------------------------------------------------+
+
+                   |
+                   v
+        +---------------------------+
+        |  Outputs                   |
+        |  - Forecasted Demand per Counter  |
+        |  - Confidence Intervals            |
+        |  - Employee Presence Probabilities |
+        |  - Confidence Score per Prediction |
+        +---------------------------+
