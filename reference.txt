@@ -4,6 +4,8 @@ https://learn.microsoft.com/en-us/answers/questions/1329200/ssis-connecting-shar
 
 https://whitepages.bifocal.show/2014/03/using-the-odata-source-connector-with-sharepoint-online-authentication 
 
+https://www.kingswaysoft.com/products/ssis-integration-toolkit-for-microsoft-sharepoint/help-manual#connectionmanager
+
 pnp
 https://spknowledge.com/2024/12/12/how-to-use-pnp-core-sdk-to-query-large-list-in-sharepoint-online/
 
