@@ -8,3 +8,6 @@ pnp
 https://spknowledge.com/2024/12/12/how-to-use-pnp-core-sdk-to-query-large-list-in-sharepoint-online/
 
 https://spknowledge.com/2024/12/11/how-to-use-pnp-core-sdk-to-communicate-with-sharepoint-online/
+
+graph
+https://youtu.be/GmWejAg2cfA?si=qZFpQ87wccuZ48O8
