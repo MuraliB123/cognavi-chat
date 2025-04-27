@@ -2,4 +2,9 @@ https://www.timmitchell.net/post/2021/01/08/connecting-to-sharepoint-lists-with-
 
 https://learn.microsoft.com/en-us/answers/questions/1329200/ssis-connecting-sharepoint-site-through-odata-sour
 
-https://whitepages.bifocal.show/2014/03/using-the-odata-source-connector-with-sharepoint-online-authentication
+https://whitepages.bifocal.show/2014/03/using-the-odata-source-connector-with-sharepoint-online-authentication 
+
+pnp
+https://spknowledge.com/2024/12/12/how-to-use-pnp-core-sdk-to-query-large-list-in-sharepoint-online/
+
+https://spknowledge.com/2024/12/11/how-to-use-pnp-core-sdk-to-communicate-with-sharepoint-online/
