@@ -1,3 +1,40 @@
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main()
+    {
+        string url = "https://yourapi.com/endpoint";
+        string token = "your_bearer_token";
+
+        using (HttpClient client = new HttpClient())
+        {
+            // Add headers
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            // Optional: Some APIs require a Content-Type header even for GET (rare, but happens)
+            client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+
+            // Send GET request
+            HttpResponseMessage response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(responseBody);
+            }
+            else
+            {
+                Console.WriteLine($"Error {response.StatusCode}: {await response.Content.ReadAsStringAsync()}");
+            }
+        }
+    }
+}
 -- MySQL dump 10.13  Distrib 8.0.35, for Linux (x86_64)
 --
 -- Host: localhost    Database: HIREOPS
